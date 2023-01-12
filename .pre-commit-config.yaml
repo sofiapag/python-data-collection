@@ -1,0 +1,41 @@
+repos:
+  - repo: https://github.com/timothycrosley/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        additional_dependencies:
+          - isort[pipfile_deprecated_finder]
+
+  - repo: https://github.com/ambv/black
+    rev: 22.8.0
+    hooks:
+      - id: black
+        language_version: python
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.3.0
+    hooks:
+      - id: check-added-large-files
+        language_version: python
+        args:
+          - --maxkb=500
+      - id: trailing-whitespace
+        language_version: python
+        args: [ --markdown-linebreak-ext=md ]
+        exclude: .github/pull_request_template.md
+      - id: check-merge-conflict
+        language_version: python
+      - id: check-case-conflict
+        language_version: python
+      - id: check-symlinks
+        language_version: python
+      - id: end-of-file-fixer
+        language_version: python
+        exclude: .gitignore
+
+
+  - repo: https://github.com/thibaudcolas/curlylint
+    rev: "v0.13.1"
+    hooks:
+      - id: curlylint
+        name: Format Jinja Templates
