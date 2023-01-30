@@ -34,7 +34,7 @@ However, due to the flexibility of our offering, this is not the only data we wa
 | --- | --- | --- | --- |
 | Four digit number | Bool | Regex Validated String | Slider Control mapped to a float |
 
-By the same token, we may want some other, unique set of columns that are picked from both the examples. You need to design and implement a solution that would let you represent both examples, and and any combination/permuation of their constituent columns.
+By the same token, we may want some other, unique set of columns that are picked from both the examples. You need to design and implement a solution that would let you represent both examples and any combination/permuation of their constituent columns.
 
 Additionally, as per the screenshot, some configuration must be present to tell the UI how many years of data we wish to collect (hence how many rows to render).
 
