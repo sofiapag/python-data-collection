@@ -107,7 +107,7 @@ async def get_crop(crop_id: int):
     return result[0]
 
 
-@app.get("/crops", status_code=status.HTTP_200_OK)
+@app.get("/crops", status_code=status.HTTP_200_OK, response_model=list[Crop])
 async def get_crops(limit: int = Query(10, le=100), offset: int = 0):
     with Session(db_internal.engine) as session:
         statement = select(Crop).limit(limit).offset(offset)
