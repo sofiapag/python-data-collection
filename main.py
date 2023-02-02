@@ -77,3 +77,18 @@ async def create_crop(crop: Crop):
         session.commit()
         session.refresh(crop)
         return crop
+
+
+@app.get(
+    "/crops/{crop_id}",
+    status_code=status.HTTP_200_OK,
+    response_model=Crop,
+    responses={404: {"model": Message}},
+)
+async def get_crop(crop_id: int):
+    with Session(db_internal.engine) as session:
+        statement = select(Crop).where(Crop.id == crop_id)
+        result = session.execute(statement).first()
+    if not result:
+        raise HTTPException(status_code=404, detail=f"crop_id {crop_id} not found")
+    return result[0]
