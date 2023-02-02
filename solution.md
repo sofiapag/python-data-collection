@@ -114,7 +114,7 @@ This is a topic of SQL migration.
 Typically, adding new columns to a table or adding new fields to an API response is not a breaking change. Deleting columns, changing the type or nullability of the column could be a breaking changing.
 
 It is important to utilize migration instead of create all tables in production.
-With migration, each mutation to the database schema is recorded and we can upgrade or downgrade migration in case of critical failure.
+With migration, each mutation to the database schema is recorded and we can upgrade migration in case of adding new features or downgrade migration in case of critical failure.
 
 Alembic is a popular SQL migration tool for FastAPI and SQLAlchemy which are used in this project.
 
@@ -127,6 +127,12 @@ Please see code for the implementation of the following tasks.
 > - Define and implement a database schema that can store this configuration.
 > - Expose a REST API to create/delete these entities.
 > - Handle some validation of inputs where sensible.
+
+- Implemented `Crop` model that represents the database schema
+- Exposed create and delete endpoints for `Crop`
+  - Included get endpoints for single or array of crops with pagination for validation
+  - Included all possible response status in Open API documentation
+- Handle validation with `sqlmodel` `Field` and `FastAPI` `Query`
 
 ### Authentication and Security
 

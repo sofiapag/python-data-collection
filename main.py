@@ -23,8 +23,6 @@ async def get_users():
         statement = select(User)
         results = session.execute(statement)
         results = list(i[0] for i in results.all())
-    # if len(results) == 0:
-    #     return []
     return results
 
 
