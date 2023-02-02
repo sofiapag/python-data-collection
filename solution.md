@@ -107,3 +107,4 @@ This is a topic of SQL migration.
 > In the future we may want to collect other information too; these columns are not fixed.
 
 Typically, adding new columns to a table or adding new fields to an API response is not a breaking change. Deleting columns, changing the type or nullability of the column could be a breaking changing.
+Alembic is a popular SQL migration tool for FastAPI and SQLAlchemy which are used in this project.
