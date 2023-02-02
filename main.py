@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, status
 from sqlmodel import select, Session
 
 import db_internal
-from models import User, Crop
+from models import Crop, User
 
 app = FastAPI()
 
@@ -58,7 +58,7 @@ async def delete_crop(crop_id: int):
 async def create_crop(crop: Crop):
     if not crop.tilled:
         crop.tillage_depth = None
-        
+
     with Session(db_internal.engine) as session:
         session.add(crop)
         session.commit()
