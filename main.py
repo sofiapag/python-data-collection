@@ -31,7 +31,7 @@ async def get_users():
 @app.delete(
     "/users/{user_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses={404: {"model": Message}},
+    responses={status.HTTP_404_NOT_FOUND: {"model": Message}},
 )
 async def delete_user(user_id: int):
     with Session(db_internal.engine) as session:
@@ -55,22 +55,30 @@ async def create_user(user: User):
 @app.delete(
     "/crops/{crop_id}",
     status_code=status.HTTP_204_NO_CONTENT,
-    responses={404: {"model": Message}},
+    responses={status.HTTP_404_NOT_FOUND: {"model": Message}},
 )
 async def delete_crop(crop_id: int):
     with Session(db_internal.engine) as session:
         row = session.get(Crop, crop_id)
         if not row:
-            raise HTTPException(status_code=404, detail=f"crop_id {crop_id} not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"crop_id {crop_id} not found")
         session.delete(row)
         session.commit()
         return
 
 
-@app.post("/crops", status_code=status.HTTP_201_CREATED, response_model=Crop)
+@app.post(
+    "/crops",
+    status_code=status.HTTP_201_CREATED,
+    response_model=Crop,
+    responses={status.HTTP_400_BAD_REQUEST: {"model": Message}},
+)
 async def create_crop(crop: Crop):
-    if not crop.tilled:
-        crop.tillage_depth = None
+    if not crop.tilled and crop.tillage_depth and crop.tillage_depth > 0:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Field is not tilled and should not have tillage_depth",
+        )
 
     with Session(db_internal.engine) as session:
         session.add(crop)
@@ -83,12 +91,12 @@ async def create_crop(crop: Crop):
     "/crops/{crop_id}",
     status_code=status.HTTP_200_OK,
     response_model=Crop,
-    responses={404: {"model": Message}},
+    responses={status.HTTP_404_NOT_FOUND: {"model": Message}},
 )
 async def get_crop(crop_id: int):
     with Session(db_internal.engine) as session:
         statement = select(Crop).where(Crop.id == crop_id)
         result = session.execute(statement).first()
     if not result:
-        raise HTTPException(status_code=404, detail=f"crop_id {crop_id} not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"crop_id {crop_id} not found")
     return result[0]
