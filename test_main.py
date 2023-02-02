@@ -48,6 +48,11 @@ def delete_crop(client: TestClient, crop_id: int):
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
+def delete_crop_404(client: TestClient, crop_id: int):
+    response = client.delete(f"/crops/{crop_id}")
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+
 def test_crud_users():
     with TestClient(app) as client:
         # expect nothing in fresh db
@@ -82,3 +87,4 @@ def test_crud_crops():
         delete_crop(client, crop_id=crop_id)
         response = get_all_crops(client)
         assert len(response) == 0
+        delete_crop_404(client, crop_id=crop_id)
