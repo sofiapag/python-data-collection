@@ -27,6 +27,11 @@ I will make an assumption that they can be combined into 1 table like this. Let'
 In this combined table, I will assume that the `External Account ID` is a foreign key of `User` id in code.
 A user / farmer may plant multiple types of crops across many years. So, the relationship is 1-to-many between `User` and `Crop`.
 
+There are cases to be made to whether or not enforce referential integrity.
+If enforced the a crop entity cannot exist without being assigned to a user.
+This improves data integrity if this behavior is desired, but it could be a performance hit to database.
+Without clear requirement, I will elect not to enforce.
+
 ## Get only the data you need
 
 ### GraphQL Approach

@@ -1,10 +1,15 @@
 from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel
 from sqlmodel import select, Session
 
 import db_internal
 from models import Crop, User
 
 app = FastAPI()
+
+
+class Message(BaseModel):
+    detail: str
 
 
 @app.on_event("startup")
@@ -23,7 +28,11 @@ async def get_users():
     return results
 
 
-@app.delete("/users/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete(
+    "/users/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {"model": Message}},
+)
 async def delete_user(user_id: int):
     with Session(db_internal.engine) as session:
         row = session.get(User, user_id)
@@ -43,7 +52,11 @@ async def create_user(user: User):
         return user
 
 
-@app.delete("/crops/{crop_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete(
+    "/crops/{crop_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={404: {"model": Message}},
+)
 async def delete_crop(crop_id: int):
     with Session(db_internal.engine) as session:
         row = session.get(Crop, crop_id)
