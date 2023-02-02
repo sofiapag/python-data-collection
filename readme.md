@@ -1,7 +1,7 @@
 # Backend Interview Coding Challenge
 This challenge is based on a simplified design challenge the Regrow engineering team has had to solve.
 
-There is no expectation to get through all of this task, rather, we want to see how you think and how you approach problems. 
+There is no expectation to get through all of this task, rather, we want to see how you think and how you approach problems.
 
 If you are completing this task live, please ask as many questions as you want. The more, the merrier!
 
@@ -15,7 +15,7 @@ In this zip file, we have created a boilerplate service. It has some methods as 
 
 All database tables are created in a file `database.db` via `sqlite`. Delete this file and restart the service to have it create your changed tables.
 
-## The Problem: 
+## The Problem:
 In one particular part of our system, we need to collect some information from farmers. Specifically, we need to ask them about what farming practices they have performed on their fields over the last several years.
 
 For reference, the UI will render the table something like:
@@ -56,4 +56,3 @@ Important notes:
 Please create a branch for your submission. When you are ready, raise a pull-request. You may use the PR description and line-of-code annotations to explain your design choices and any aspects of your solution we should know about.
 
 **Let the Regrow team know, via your point of contact (either a recruiter or our internal people team), when you are ready for us to review.**
-
