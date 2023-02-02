@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlmodel import select, Session
 
@@ -23,8 +23,8 @@ async def get_users():
         statement = select(User)
         results = session.execute(statement)
         results = list(i[0] for i in results.all())
-    if len(results) == 0:
-        return []
+    # if len(results) == 0:
+    #     return []
     return results
 
 
@@ -61,7 +61,10 @@ async def delete_crop(crop_id: int):
     with Session(db_internal.engine) as session:
         row = session.get(Crop, crop_id)
         if not row:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"crop_id {crop_id} not found")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"crop_id {crop_id} not found",
+            )
         session.delete(row)
         session.commit()
         return
@@ -98,5 +101,16 @@ async def get_crop(crop_id: int):
         statement = select(Crop).where(Crop.id == crop_id)
         result = session.execute(statement).first()
     if not result:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"crop_id {crop_id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"crop_id {crop_id} not found"
+        )
     return result[0]
+
+
+@app.get("/crops", status_code=status.HTTP_200_OK)
+async def get_crops(limit: int = Query(10, le=100), offset: int = 0):
+    with Session(db_internal.engine) as session:
+        statement = select(Crop).limit(limit).offset(offset)
+        results = session.execute(statement)
+        results = list(i[0] for i in results.all())
+    return results
