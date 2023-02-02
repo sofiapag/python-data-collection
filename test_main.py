@@ -4,20 +4,47 @@ from fastapi.testclient import TestClient
 from main import app
 
 
-def create_user(client) -> dict:
+def create_user(client: TestClient) -> dict:
     response = client.post("/users", json={"name": "foobar"})
     assert response.status_code == status.HTTP_201_CREATED
     return response.json()
 
 
-def get_all_users(client) -> dict:
+def get_all_users(client: TestClient) -> dict:
     response = client.get("/users")
     assert response.status_code == status.HTTP_200_OK
     return response.json()
 
 
-def delete_user(client, user_id: int):
+def delete_user(client: TestClient, user_id: int):
     response = client.delete(f"/users/{user_id}")
+    assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+def create_crop(client: TestClient) -> dict:
+    response = client.post(
+        "/crops", 
+        json={
+            "year": 2000,
+            "crop_type": "corn",
+            "tilled": True,
+            "tillage_depth": 2,
+            "comments": "Corn was planted",
+            "user_id": 1
+        }
+    )
+    assert response.status_code == status.HTTP_201_CREATED
+    return response.json()
+
+
+def get_all_crops(client: TestClient) -> dict:
+    response = client.get("/crops")
+    assert response.status_code == status.HTTP_200_OK
+    return response.json()
+
+
+def delete_crop(client: TestClient, crop_id: int):
+    response = client.delete(f"/crops/{crop_id}")
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
 
@@ -34,6 +61,24 @@ def test_crud_users():
         assert len(response) == 1
         assert response[0]["id"] == user_id
         assert response[0]["name"] == "foobar"
-        response = delete_user(client, user_id=user_id)
+        delete_user(client, user_id=user_id)
         response = get_all_users(client)
+        assert len(response) == 0
+
+
+def test_crud_crops():
+    with TestClient(app) as client:
+        # expect nothing in fresh db
+        response = get_all_crops(client)
+        assert len(response) == 0
+        # create an entry
+        response = create_crop(client)
+        crop_id = response["id"]
+        # get entry
+        response = get_all_crops(client)
+        assert len(response) == 1
+        assert response[0]["year"] == 2000
+        assert response[0]["crop_type"] == "corn"
+        delete_crop(client, crop_id=crop_id)
+        response = get_all_crops(client)
         assert len(response) == 0
