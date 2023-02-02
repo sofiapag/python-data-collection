@@ -112,4 +112,28 @@ This is a topic of SQL migration.
 > In the future we may want to collect other information too; these columns are not fixed.
 
 Typically, adding new columns to a table or adding new fields to an API response is not a breaking change. Deleting columns, changing the type or nullability of the column could be a breaking changing.
+
+It is important to utilize migration instead of create all tables in production.
+With migration, each mutation to the database schema is recorded and we can upgrade or downgrade migration in case of critical failure.
+
 Alembic is a popular SQL migration tool for FastAPI and SQLAlchemy which are used in this project.
+
+### Implemented
+
+Please see code for the implementation of the following tasks.
+
+> It is your task to:
+>
+> - Define and implement a database schema that can store this configuration.
+> - Expose a REST API to create/delete these entities.
+> - Handle some validation of inputs where sensible.
+
+### Authentication and Security
+
+This is an important consideration but not implemented in the assignment.
+For a user facing application like this one, a modern solution is to use OpenID Connect protocol with an identity provider such as Okta or Azure Active Directory.
+
+We can also stored user passwords as hash in the database, but this not the most modern and secure option.
+
+If this were implemented, then the user can only view crops or other data belong to that user and other user's data.
+This is an import security safeguard.
