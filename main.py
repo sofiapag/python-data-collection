@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, status
 from sqlmodel import select, Session
 
 import db_internal
-from models import User
+from models import User, Crop
 
 app = FastAPI()
 
@@ -41,3 +41,26 @@ async def create_user(user: User):
         session.commit()
         session.refresh(user)
         return user
+
+
+@app.delete("/crops/{crop_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_crop(crop_id: int):
+    with Session(db_internal.engine) as session:
+        row = session.get(Crop, crop_id)
+        if not row:
+            raise HTTPException(status_code=404, detail=f"crop_id {crop_id} not found")
+        session.delete(row)
+        session.commit()
+        return
+
+
+@app.post("/crops", status_code=status.HTTP_201_CREATED, response_model=Crop)
+async def create_crop(crop: Crop):
+    if not crop.tilled:
+        crop.tillage_depth = None
+        
+    with Session(db_internal.engine) as session:
+        session.add(crop)
+        session.commit()
+        session.refresh(crop)
+        return crop
