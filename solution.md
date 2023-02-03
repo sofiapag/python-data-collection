@@ -44,8 +44,9 @@ For example, a graphql query could look like this:
 
 ```graphql
 {
-    query ($userId: UserId) {
-        cropsByUser(userId: $userId){
+    query ($cropId: Int!) {
+        getCrop(cropId: $cropId){
+            cropId
             userId
             year
             cropType
@@ -60,7 +61,7 @@ For example, a graphql query could look like this:
 With graphql variable like:
 
 ```json
-{ "userId": 12345 }
+{ "cropId": 12345 }
 ```
 
 The client is free to omit 1 or multiple fields in the graphql query and get back only the data of interest.
@@ -75,7 +76,7 @@ The value for this "fields" parameter could be a comma-separated list.
 The endpoint could look like this:
 
 ```
-/crops/{user_id}?fields=user_id,year,crop_type
+/crops/{crop_id}?fields=user_id,year,crop_type
 ```
 
 In the view/route/endpoint function, we can manipulate the SQL result to include only the selected fields.
@@ -92,7 +93,7 @@ This is a topic of pagination. When an array is potentially unbounded from a dat
 There are several ways to implement pagination. For example with page_size and page_num:
 
 ```
-/crops/{user_id}?page_size=10&page_num=3
+/crops?page_size=10&page_num=3
 ```
 
 page_size determines the number of items in a page while page_num can be used to iterate or traverse all the records.
@@ -100,7 +101,7 @@ page_size determines the number of items in a page while page_num can be used to
 Another option is to use limit and offset:
 
 ```
-/crops/{user_id}?limit=10&offset=50
+/crops?limit=10&offset=50
 ```
 
 On the database level, it is typically limit and offset. It can be implemented as page_size and page_num for convenience to the user.
